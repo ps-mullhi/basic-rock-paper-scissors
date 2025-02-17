@@ -1,5 +1,3 @@
-
-
 function getComputerChoice() {
     //random generate value between 0 and 1
     let randomNum = Math.random()
@@ -46,15 +44,14 @@ function getHumanChoice() {
     return humanChoice;
 }
 
-let humanScore = 0;
-let computerScore = 0;
-function playRound(humanChoice, computerChoice) {
+
+function playRound(humanChoice, computerChoice, 
+                    humanScore, computerScore) {
     // didHumanWin = false; use to see who wins
     let didHumanWin = false;
 
     if (humanChoice == computerChoice){
-        console.log(`Tie! ${humanChoice} is the same as ${computerChoice}.`)
-        return;
+        return 2;
     }
 
     // if user has rock and comp doesn't have paper, user wins
@@ -74,20 +71,39 @@ function playRound(humanChoice, computerChoice) {
         didHumanWin = false;
     }
 
-    // if human won, then output "You win! {} beats {}", also increment counter;
-    if (didHumanWin) {
-        console.log(`You won! ${humanChoice} beats ${computerChoice}.`)
-        humanScore++;
+    return didHumanWin;
+}
+   
+
+function playGame() {
+    let humanScore = 0;
+    let computerScore = 0;
+
+    for (let i = 0; i < 5; i++) {
+        let humanChoice = getHumanChoice();
+        let computerChoice = getComputerChoice();
+        let didHumanWin = playRound(humanChoice, computerChoice);
+
+        // if human won, then output "You win! {} beats {}", also increment counter;
+        if (didHumanWin == 1) {
+            console.log(`You won! ${humanChoice} beats ${computerChoice}.`)
+            humanScore++;
+        }
+        else if (didHumanWin == 2) {
+            console.log(`Tie! ${humanChoice} is the same as ${computerChoice}.`)
+            i--;
+        }
+        // else, output "You lose! {} beats {}" also increment counter;
+        else {
+            console.log(`You lose! ${computerChoice} beats ${humanChoice}.`)
+            computerScore++;
+        }
     }
-    // else, output "You lose! {} beats {}" also increment counter;
-    else {
-        console.log(`You lose! ${computerChoice} beats ${humanChoice}.`)
-        computerScore++;
-    }
+
+    console.log(`Your score: ${humanScore}\nComputer score: ${computerScore}`);
 }
 
-
-playRound(getHumanChoice(), getComputerChoice());    
+playGame();
 
 
 
