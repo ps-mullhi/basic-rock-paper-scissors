@@ -23,18 +23,71 @@ function getComputerChoice() {
 
 
 function getHumanChoice() {
-    //get user input
-    let humanChoice = prompt("Enter one of \"rock\", \"paper\", or \"scissors\"");
-
-    humanChoice = humanChoice.toLowerCase();
-    //if user output is one of "rock", "paper", or "scissors" after
-    //lowercasing it, return that lowercase. Else, alert that is in an invalid choice
-    if (humanChoice == "rock" || humanChoice == "paper" || humanChoice == "scissors"){
-        return humanChoice;
+    let humanChoice = "";
+    while(humanChoice == ""){
+        //get user input
+        humanChoice = prompt("Enter one of \"rock\", \"paper\", or \"scissors\"");
+        
+        humanChoice = humanChoice.toLowerCase();
+        // //if user output is one of "rock", "paper", or "scissors" after
+        // //lowercasing it, return that lowercase. Else, alert that is in an invalid choice
+        // if (humanChoice == "rock" || humanChoice == "paper" || humanChoice == "scissors"){
+        //     return humanChoice;
+        // }
+        // else {
+        //     alert("That is an invalid entry!");
+        //     return "";
+        // }
+        if (!(humanChoice === "rock" || humanChoice === "paper" || humanChoice === "scissors")){
+            alert("That is an invalid entry!");
+            humanChoice = "";
+        }
     }
+    return humanChoice;
+}
+
+let humanScore = 0;
+let computerScore = 0;
+function playRound(humanChoice, computerChoice) {
+    // didHumanWin = false; use to see who wins
+    let didHumanWin = false;
+
+    if (humanChoice == computerChoice){
+        console.log(`Tie! ${humanChoice} is the same as ${computerChoice}.`)
+        return;
+    }
+
+    // if user has rock and comp doesn't have paper, user wins
+    if (humanChoice === "rock" && computerChoice != "paper"){
+        didHumanWin = true;
+    }
+    // else if user has paper and comp doesn't have scissors, user wins
+    else if (humanChoice === "paper" && computerChoice != "scissors") {
+        didHumanWin = true;
+    }
+    // else if user has scissors and comp doesn't have rock, user wins
+    else if (humanChoice === "scissors" && computerChoice != "rock") {
+        didHumanWin = true;
+    }
+    // else comp wins
     else {
-        alert("That is an invalid entry!");
-        return "";
+        didHumanWin = false;
+    }
+
+    // if human won, then output "You win! {} beats {}", also increment counter;
+    if (didHumanWin) {
+        console.log(`You won! ${humanChoice} beats ${computerChoice}.`)
+        humanScore++;
+    }
+    // else, output "You lose! {} beats {}" also increment counter;
+    else {
+        console.log(`You lose! ${computerChoice} beats ${humanChoice}.`)
+        computerScore++;
     }
 }
+
+
+playRound(getHumanChoice(), getComputerChoice());    
+
+
 
