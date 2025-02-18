@@ -23,19 +23,10 @@ function getComputerChoice() {
 function getHumanChoice() {
     let humanChoice = "";
     while(humanChoice == ""){
-        //get user input
         humanChoice = prompt("Enter one of \"rock\", \"paper\", or \"scissors\"");
         
         humanChoice = humanChoice.toLowerCase();
-        // //if user output is one of "rock", "paper", or "scissors" after
-        // //lowercasing it, return that lowercase. Else, alert that is in an invalid choice
-        // if (humanChoice == "rock" || humanChoice == "paper" || humanChoice == "scissors"){
-        //     return humanChoice;
-        // }
-        // else {
-        //     alert("That is an invalid entry!");
-        //     return "";
-        // }
+
         if (!(humanChoice === "rock" || humanChoice === "paper" || humanChoice === "scissors")){
             alert("That is an invalid entry!");
             humanChoice = "";
@@ -47,26 +38,21 @@ function getHumanChoice() {
 
 function playRound(humanChoice, computerChoice, 
                     humanScore, computerScore) {
-    // didHumanWin = false; use to see who wins
     let didHumanWin = false;
 
     if (humanChoice == computerChoice){
         return 2;
     }
 
-    // if user has rock and comp doesn't have paper, user wins
     if (humanChoice === "rock" && computerChoice != "paper"){
         didHumanWin = true;
     }
-    // else if user has paper and comp doesn't have scissors, user wins
     else if (humanChoice === "paper" && computerChoice != "scissors") {
         didHumanWin = true;
     }
-    // else if user has scissors and comp doesn't have rock, user wins
     else if (humanChoice === "scissors" && computerChoice != "rock") {
         didHumanWin = true;
     }
-    // else comp wins
     else {
         didHumanWin = false;
     }
@@ -74,36 +60,96 @@ function playRound(humanChoice, computerChoice,
     return didHumanWin;
 }
    
+let humanScore = 0;
+let computerScore = 0;
 
-function playGame() {
-    let humanScore = 0;
-    let computerScore = 0;
-
-    for (let i = 0; i < 5; i++) {
-        let humanChoice = getHumanChoice();
-        let computerChoice = getComputerChoice();
-        let didHumanWin = playRound(humanChoice, computerChoice);
-
-        // if human won, then output "You win! {} beats {}", also increment counter;
-        if (didHumanWin == 1) {
-            console.log(`You won! ${humanChoice} beats ${computerChoice}.`)
-            humanScore++;
-        }
-        else if (didHumanWin == 2) {
-            console.log(`Tie! ${humanChoice} is the same as ${computerChoice}.`)
-            i--;
-        }
-        // else, output "You lose! {} beats {}" also increment counter;
-        else {
-            console.log(`You lose! ${computerChoice} beats ${humanChoice}.`)
-            computerScore++;
-        }
+function updateScores(didHumanWin, humanChoice, computerChoice) {
+    if (didHumanWin == 1) {
+        displayOutcome(didHumanWin, humanChoice, computerChoice);
+        humanScore++;
+    }
+    else if (didHumanWin == 2) {
+        console.log(`Tie`)
+    }
+    else {
+        computerScore++;
     }
 
-    console.log(`Your score: ${humanScore}\nComputer score: ${computerScore}`);
+    displayOutcome(didHumanWin, humanChoice, computerChoice);
+
+    if (humanScore >= 5 || computerScore >= 5){
+        endGame();
+    }
 }
 
-playGame();
+function endGame(){
+    const container = document.querySelector("#container");
+
+    let matchResultPara = document.createElement('p');
+    let matchResult = humanScore > computerScore ? "WINNER!" : "LOSER!";
+    matchResultPara.textContent = matchResult;
+
+    container.appendChild(matchResultPara);
+
+    humanScore = 0;
+    computerScore = 0;
+}
+
+function displayOutcome(didHumanWin, humanChoice, computerChoice) {
+    const container = document.querySelector("#container");
+    container.innerHTML = "";
+
+    let humanChoicePara = document.createElement('p');
+    humanChoicePara.textContent = `Your Choice: ${humanChoice}`;
+
+    let computerChoicePara = document.createElement('p');
+    computerChoicePara.textContent = `Computer Choice: ${computerChoice}`;
+
+    let resultPara = document.createElement('p');
+    let result = "";
+    switch (didHumanWin) {
+        case false:
+            result = `You lose! ${computerChoice} beats ${humanChoice}`
+            break;
+        case true:
+            result = `You win! ${humanChoice} beats ${computerChoice}`
+            break;
+        case 2:
+            result = `Tie! ${humanChoice} is the same as ${computerChoice}.`
+            break;
+    }
+    resultPara.textContent = `Result: ${result}`;
+
+    let currentScoresPara = document.createElement('p');
+    currentScoresPara.textContent = `Scores:\nYou - ${humanScore}\nComputer - ${computerScore}`;
+
+    container.appendChild(humanChoicePara);
+    container.appendChild(computerChoicePara);
+    container.appendChild(resultPara);
+    container.appendChild(currentScoresPara);
+}
+
+const rockButton = document.querySelector("#rock");
+const paperButton = document.querySelector("#paper");
+const scissorsButton = document.querySelector("#scissors");
+
+rockButton.addEventListener("click", (e) => {
+    let computerChoice = getComputerChoice();
+    let didHumanWin = playRound("rock", computerChoice);
+    updateScores(didHumanWin, "rock", computerChoice);
+});
+
+paperButton.addEventListener("click", (e) => {
+    let computerChoice = getComputerChoice();
+    let didHumanWin = playRound("paper", computerChoice);
+    updateScores(didHumanWin, "paper", computerChoice);
+});
+
+scissorsButton.addEventListener("click", (e) => {
+    let computerChoice = getComputerChoice();
+    let didHumanWin = playRound("scissors", computerChoice);
+    updateScores(didHumanWin, "scissors", computerChoice);
+});
 
 
 
